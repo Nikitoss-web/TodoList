@@ -16,11 +16,12 @@ extension TodoList {
         return NSFetchRequest<TodoList>(entityName: "TodoList")
     }
 
-    @NSManaged public var id: Int16
-    @NSManaged public var todo: String?
     @NSManaged public var completed: Bool
-    @NSManaged public var userId: Int16
+    @NSManaged public var id: Int16
     @NSManaged public var name: String?
+    @NSManaged public var todo: String?
+    @NSManaged public var userId: Int16
+    @NSManaged public var time: String?
 
 }
 

@@ -25,7 +25,7 @@ final class CoreDataService {
         return persistentContainer.viewContext
     }
     
-    func saveData(with dummyjsonResult: [DummyjsonResult]) {
+    func saveData(with dummyjsonResult: [DummyjsonResult], time: String) {
         context.perform { [weak self] in
             guard let self = self else { return }
             for dummyjsonResults in dummyjsonResult {
@@ -35,6 +35,7 @@ final class CoreDataService {
                 todoList.userId = Int16(dummyjsonResults.userId)
                 todoList.name =  dummyjsonResults.todo.components(separatedBy: " ").prefix(3).joined(separator: " ")
                 todoList.todo = dummyjsonResults.todo
+                todoList.time = time
             }
             self.saveContext()
         }
@@ -52,7 +53,6 @@ final class CoreDataService {
     }
     
     func deleteAllData() {
-        // Создайте запрос с явным указанием имени сущности
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TodoList")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
 

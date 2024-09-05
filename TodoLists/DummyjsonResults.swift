@@ -5,7 +5,6 @@ struct DummyjsonResult: Decodable {
     let userId: Int
 }
 
-// Модель для всего ответа с задачами
 struct DummyjsonResponse: Decodable {
     let todos: [DummyjsonResult]
 }

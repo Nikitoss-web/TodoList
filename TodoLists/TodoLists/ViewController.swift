@@ -18,28 +18,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         installationTodayDate()
+        checkingDatabase()
         tableView.dataSource = self
         allTask.text = String(quantityAll())
         openTask.text =  String(quantity().0)
         closedTask.text =  String(quantity().1)
         
-//        CoreDataService.shared.deleteAllData()
+//     CoreDataService.shared.deleteAllData()
         
         
         
-        
-//        let api = DummyjsonAPI()
-//        api.dummyjson { result in
-//            switch result {
-//            case .success(let todos):
-//                print("Загружено \(todos.count) задач:")
-//                for todo in todos {
-//                    print(todo.todo)
-//                }
-//            case .failure(let error):
-//                print("Ошибка: \(error)")
-//            }
-//        }
+
     }
     @IBAction private func authorizationButton() {
         if let todoLists = CoreDataService.shared.fetchData() {
@@ -65,24 +54,7 @@ class ViewController: UIViewController {
         
     }
     
-    
-    private func timeLoadingData() -> String{
-        let date = Date()
-        let calendar = Calendar.current
 
-        let oneHourLater = calendar.date(byAdding: .hour, value: 1, to: date)!
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = " h:mm a"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        
-        let currentTime = dateFormatter.string(from: date)
-        let oneHourLaterTime = dateFormatter.string(from: oneHourLater)
-
-        // Выводим строку
-        let timeLoading = "Today \(currentTime) - \(oneHourLaterTime)"
-        return timeLoading
-    }
     
     private func quantityAll() -> Int{
         let todoLists = CoreDataService.shared.fetchData()
@@ -104,6 +76,25 @@ class ViewController: UIViewController {
         }
         return (open, closed)
     }
+      
+    private func checkingDatabase(){
+        
+        let todoLists = CoreDataService.shared.fetchData()
+        if todoLists?.count == 0 {
+            let api = DummyjsonAPI()
+            api.dummyjson { result in
+                switch result {
+                case .success(let todos):
+                    print("Загружено \(todos.count) задач:")
+                    for todo in todos {
+                        print(todo.todo)
+                    }
+                case .failure(let error):
+                    print("Ошибка: \(error)")
+                }
+            }
+        }
+    }
     
 }
 
@@ -120,7 +111,7 @@ extension ViewController: UITableViewDataSource {
                 let todo = todoLists[indexPath.row]
                 cell?.todo.text = todo.todo
                 cell?.name.text = todo.name
-                cell?.date.text = timeLoadingData()
+                cell?.date.text = todo.time
             }
             return cell ?? UITableViewCell()
         }
