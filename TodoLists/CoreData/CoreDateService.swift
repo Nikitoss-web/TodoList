@@ -51,6 +51,17 @@ final class CoreDataService {
             return nil
         }
     }
+    func delete(_ task: TodoList){
+         let context = persistentContainer.viewContext
+        context.delete(task)
+        do{
+            try context.save()
+        }
+        catch {
+            print("Faild to delete: \(error)")
+        }
+        
+    }
     
     func deleteAllData() {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TodoList")
@@ -65,6 +76,30 @@ final class CoreDataService {
         }
     }
 
+    
+    
+    
+    
+    func addNewTask(name: String, todo: String, time: String) {
+        let context = persistentContainer.viewContext
+        context.perform {
+            let newTodoList = TodoList(context: context)
+            newTodoList.id = Int16((self.fetchData()?.endIndex ?? 0) + 1)
+            newTodoList.userId = Int16.random(in: 1..<1000)
+            newTodoList.name = name
+            newTodoList.todo = todo
+            newTodoList.completed = false 
+            newTodoList.time = time
+
+            self.saveContext()
+        }
+    }
+
+    
+    
+    
+    
+    
     
     func saveContext () {
         let context = persistentContainer.viewContext

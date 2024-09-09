@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var todayDate: UILabel!
     @IBOutlet weak var openTask: UILabel!
     @IBOutlet weak var closedTask: UILabel!
@@ -20,41 +20,59 @@ class ViewController: UIViewController {
         installationTodayDate()
         checkingDatabase()
         tableView.dataSource = self
+        tableView.delegate = self
         allTask.text = String(quantityAll())
         openTask.text =  String(quantity().0)
         closedTask.text =  String(quantity().1)
         
-//     CoreDataService.shared.deleteAllData()
         
         
         
+       // CoreDataService.shared.deleteAllData()
+        
+        
+        
+        
+    }
+    
+    
+    
+    func updateTableView() {
+        tableView.reloadData()
+        allTask.text = String(quantityAll())
+        openTask.text = String(quantity().0)
+        closedTask.text = String(quantity().1)
+    }
 
+    func updateTableView1() {
+       
+        openTask.text = String(quantity().0)
+        closedTask.text = String(quantity().1)
     }
+
+    
     @IBAction private func authorizationButton() {
-        if let todoLists = CoreDataService.shared.fetchData() {
-            for todo in todoLists {
-                print("Todo ID: \(todo.id), Name: \(todo.name ?? "No Name"), Completed: \(todo.completed), todo: \(todo.todo ?? "")")
-            }
-        }
-        print(quantityAll())
-        print(quantity())
-    }
+        let mainStorybord = UIStoryboard(name: "AddNewTask", bundle: nil)
+          let addNewTaskVC = mainStorybord.instantiateViewController(identifier: "AddNewTaskView") as! AddNewTaskView
+          addNewTaskVC.viewController = self  // Передайте текущий контроллер
+          navigationController?.pushViewController(addNewTaskVC, animated: true)
+      }
     
     
     private func installationTodayDate(){
         let date = Date()
         let dateFormatter = DateFormatter()
-
+        
         dateFormatter.dateFormat = "EEEE, d MMMM"
         dateFormatter.locale = Locale(identifier: "en_US")
-
+        
         let formattedDate = dateFormatter.string(from: date)
         todayDate.text = formattedDate
         print(formattedDate)
         
     }
     
-
+    
     
     private func quantityAll() -> Int{
         let todoLists = CoreDataService.shared.fetchData()
@@ -76,44 +94,73 @@ class ViewController: UIViewController {
         }
         return (open, closed)
     }
-      
-    private func checkingDatabase(){
-        
+    
+    private func checkingDatabase() {
+       
         let todoLists = CoreDataService.shared.fetchData()
+       
         if todoLists?.count == 0 {
-            let api = DummyjsonAPI()
-            api.dummyjson { result in
-                switch result {
-                case .success(let todos):
-                    print("Загружено \(todos.count) задач:")
-                    for todo in todos {
-                        print(todo.todo)
+           
+                let api = DummyjsonAPI()
+            
+                api.dummyjson { [weak self]  result in
+                    switch result {
+                    case .success(let todos):
+                        print("Загружено \(todos.count) задач:")
+                        for todo in todos {
+                            print(todo.todo)
+                        }
+                        DispatchQueue.main.async {
+                    self?.updateTableView()  
+                                      }
+                    case .failure(let error):
+                        print("Ошибка: \(error)")
                     }
-                case .failure(let error):
-                    print("Ошибка: \(error)")
-                }
+                
             }
+            self.updateTableView()
+        }
+            else {
+                self.tableView.reloadData()
+                
+            }
+           
         }
     }
-    
-}
+
+
 
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return CoreDataService.shared.fetchData()?.count ?? 0
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier", for: indexPath) as? ListTableViewCell
-            
-            if let todoLists = CoreDataService.shared.fetchData() {
-                let todo = todoLists[indexPath.row]
-                cell?.todo.text = todo.todo
-                cell?.name.text = todo.name
-                cell?.date.text = todo.time
-            }
-            return cell ?? UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier", for: indexPath) as? ListTableViewCell
+        
+        if let todoLists = CoreDataService.shared.fetchData() {
+            let todo = todoLists[indexPath.row]
+            cell?.configCell(todoText: todo.todo ?? "", nameText: todo.name ?? "", dateText: todo.time ?? "", isCompleted: todo.completed, todoItem: todo)
         }
+
+        return cell ?? UITableViewCell()
+    }
+
+
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if let todoLists = CoreDataService.shared.fetchData(){
+                let todoToDelete = todoLists[indexPath.row]
+                CoreDataService.shared.delete(todoToDelete)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                allTask.text = String(quantityAll())
+                openTask.text =  String(quantity().0)
+                closedTask.text =  String(quantity().1)
+                
+            }
+        }
+    }
 }
+
 

@@ -34,7 +34,7 @@ final class DummyjsonAPI: Dummyjson {
         
         task.resume()
     }
-    private func timeLoadingData() -> String{
+     func timeLoadingData() -> String{
         let date = Date()
         let calendar = Calendar.current
 

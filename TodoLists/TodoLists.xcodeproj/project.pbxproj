@@ -26,6 +26,7 @@
 		448AAF7B2C8A4F63002B84CA /* TodoList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448AAF792C8A4F63002B84CA /* TodoList+CoreDataClass.swift */; };
 		448AAF7C2C8A4F63002B84CA /* TodoList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448AAF7A2C8A4F63002B84CA /* TodoList+CoreDataProperties.swift */; };
 		448AAF7E2C8A503D002B84CA /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448AAF7D2C8A503D002B84CA /* ListTableViewCell.swift */; };
+		448AAF802C8A55ED002B84CA /* AddNewTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448AAF7F2C8A55ED002B84CA /* AddNewTaskView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		448AAF792C8A4F63002B84CA /* TodoList+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoList+CoreDataClass.swift"; sourceTree = "<group>"; };
 		448AAF7A2C8A4F63002B84CA /* TodoList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoList+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		448AAF7D2C8A503D002B84CA /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
+		448AAF7F2C8A55ED002B84CA /* AddNewTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewTaskView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				448AAF7D2C8A503D002B84CA /* ListTableViewCell.swift */,
 				448AAF6E2C89DC4E002B84CA /* CoreData */,
 				448AAF6C2C89C4E3002B84CA /* AddNewTask.storyboard */,
+				448AAF7F2C8A55ED002B84CA /* AddNewTaskView.swift */,
 				448AAF6A2C888BFA002B84CA /* EnumRequest.swift */,
 				448AAF682C8889AD002B84CA /* DummyjsonAPI.swift */,
 				448AAF662C888995002B84CA /* DummyjsonResults.swift */,
@@ -298,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				448AAF362C888948002B84CA /* ViewController.swift in Sources */,
+				448AAF802C8A55ED002B84CA /* AddNewTaskView.swift in Sources */,
 				448AAF322C888948002B84CA /* AppDelegate.swift in Sources */,
 				448AAF6B2C888BFA002B84CA /* EnumRequest.swift in Sources */,
 				448AAF342C888948002B84CA /* SceneDelegate.swift in Sources */,
