@@ -1,13 +1,6 @@
-//
-//  CoreDateService.swift
-//  TodoLists
-//
-//  Created by НИКИТА ПЕСНЯК on 5.09.24.
-//
-
 import Foundation
 import CoreData
-final class CoreDataService {
+class CoreDataService {
     static var shared = CoreDataService()
     private init() {}
     
@@ -40,6 +33,7 @@ final class CoreDataService {
             self.saveContext()
         }
     }
+    
     func fetchData() -> [TodoList]? {
         let fetchRequest: NSFetchRequest<TodoList> = TodoList.fetchRequest()
         
@@ -51,8 +45,9 @@ final class CoreDataService {
             return nil
         }
     }
+    
     func delete(_ task: TodoList){
-         let context = persistentContainer.viewContext
+        let context = persistentContainer.viewContext
         context.delete(task)
         do{
             try context.save()
@@ -66,7 +61,7 @@ final class CoreDataService {
     func deleteAllData() {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TodoList")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
+        
         do {
             try context.execute(deleteRequest)
             try context.save()
@@ -75,31 +70,28 @@ final class CoreDataService {
             print("Ошибка при удалении данных: \(error.localizedDescription)")
         }
     }
-
     
-    
-    
-    
-    func addNewTask(name: String, todo: String, time: String) {
+    func addNewTask(name: String, todo: String, time: String) -> Bool {
         let context = persistentContainer.viewContext
-        context.perform {
+        var success = false
+        context.performAndWait {
             let newTodoList = TodoList(context: context)
             newTodoList.id = Int16((self.fetchData()?.endIndex ?? 0) + 1)
             newTodoList.userId = Int16.random(in: 1..<1000)
             newTodoList.name = name
             newTodoList.todo = todo
-            newTodoList.completed = false 
+            newTodoList.completed = false
             newTodoList.time = time
-
-            self.saveContext()
+            
+            do {
+                try context.save()
+                success = true
+            } catch {
+                print("Failed to save new task: \(error.localizedDescription)")
+            }
         }
+        return success
     }
-
-    
-    
-    
-    
-    
     
     func saveContext () {
         let context = persistentContainer.viewContext
